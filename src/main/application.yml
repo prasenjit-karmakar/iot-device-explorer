@@ -1,0 +1,4 @@
+defaultName: DeviceExplorer
+iotHubconnectionString: HostName=DemoIotHubTecho.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=Isf6fOl7GPidcWws1/xpOHSUS8ngxKKlcKiOnnk6eV0=
+#iotHubconnectionString: HostName=birlasoftrial2.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=mfBZLsKD8x6zxRNZ6dN4QAm6g9JB6Ly+fkYk7aLJIDc=
+maxShowDeviceCount: 100
