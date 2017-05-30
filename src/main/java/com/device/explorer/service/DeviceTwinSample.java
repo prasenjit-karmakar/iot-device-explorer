@@ -10,6 +10,9 @@ import com.microsoft.azure.sdk.iot.device.DeviceTwin.PropertyCallBack;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.Date;
 import java.util.Scanner;
 
 /**
@@ -17,11 +20,11 @@ import java.util.Scanner;
  * MQTT transport.
  */
 public class DeviceTwinSample {
-    private enum LIGHTS {ON, OFF, DISABLED}
-
-    private enum CAMERA {DETECTED_BURGLAR, SAFELY_WORKING}
+    private enum MANUFACTURER {ABC, XYZ}
 
     private static final int MAX_EVENTS_TO_REPORT = 5;
+
+    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
 
     protected static class DeviceTwinStatusCallBack implements IotHubEventCallback {
         public void execute(IotHubStatusCode status, Object context) {
@@ -32,9 +35,6 @@ public class DeviceTwinSample {
     protected static class onHomeTempChange implements PropertyCallBack {
         @Override
         public void PropertyCall(Object propertyKey, Object propertyValue, Object context) {
-            if (propertyValue.equals(80)) {
-                System.out.println("Cooling down home, temp changed to " + propertyValue);
-            }
         }
 
     }
@@ -42,10 +42,6 @@ public class DeviceTwinSample {
     protected static class onCameraActivity implements PropertyCallBack {
         @Override
         public void PropertyCall(Object propertyKey, Object propertyValue, Object context) {
-            System.out.println(propertyKey + " changed to " + propertyValue);
-            if (propertyValue.equals(CAMERA.DETECTED_BURGLAR)) {
-                System.out.println("Triggering alarm, burglar detected");
-            }
         }
 
     }
@@ -105,25 +101,25 @@ public class DeviceTwinSample {
 
             System.out.println("Starting to device Twin...");
 
-            homeKit.setDesiredPropertyCallback(new Property("homeTemp", null), new onHomeTempChange(), null);
-            homeKit.setDesiredPropertyCallback(new Property("livingRoomLights", null), homeKit, null);
-            homeKit.setDesiredPropertyCallback(new Property("bedRoomLights", null), homeKit, null);
-            homeKit.setDesiredPropertyCallback(new Property("homeSecurityCamera", null), new onCameraActivity(), null);
+            homeKit.setDesiredPropertyCallback(new Property("manufacturer", null), homeKit, null);
+            homeKit.setDesiredPropertyCallback(new Property("modelNumber", null), homeKit, null);
+            homeKit.setDesiredPropertyCallback(new Property("lastServiceDate", null), homeKit, null);
+            homeKit.setDesiredPropertyCallback(new Property("nextServiceDate", null), homeKit, null);
 
-            homeKit.setReportedProp(new Property("homeTemp", 70));
-            homeKit.setReportedProp(new Property("livingRoomLights", LIGHTS.ON));
-            homeKit.setReportedProp(new Property("bedRoomLights", LIGHTS.OFF));
-
-            for (int i = 0; i < MAX_EVENTS_TO_REPORT; i++) {
+            homeKit.setReportedProp(new Property("manufacturer", MANUFACTURER.ABC.name()));
+            homeKit.setReportedProp(new Property("modelNumber", "412C-EF"));
+            homeKit.setReportedProp(new Property("lastServiceDate", sdf.format(new Date())));
+            homeKit.setReportedProp(new Property("nextServiceDate", sdf.format(new Date())));
+            /*for (int i = 0; i < MAX_EVENTS_TO_REPORT; i++) {
 
                 if (Math.random() % MAX_EVENTS_TO_REPORT == 3) {
                     homeKit.setReportedProp(new Property("homeSecurityCamera", CAMERA.DETECTED_BURGLAR));
                 } else {
                     homeKit.setReportedProp(new Property("homeSecurityCamera", CAMERA.SAFELY_WORKING));
-                }
-                client.sendReportedProperties(homeKit.getReportedProp());
-                System.out.println("Updating reported properties..");
-            }
+                }*/
+            client.sendReportedProperties(homeKit.getReportedProp());
+            System.out.println("Updating reported properties..");
+            // }
 
             client.subscribeToDesiredProperties(homeKit.getDesiredProp());
             System.out.println("Waiting for Desired properties");
@@ -134,10 +130,10 @@ public class DeviceTwinSample {
             System.out.println("Shutting down...");
         }
 
-        System.out.println("Press any key to exit...");
-
-        Scanner scanner = new Scanner(System.in);
-        scanner.nextLine();
+//        System.out.println("Press any key to exit...");
+//
+//        Scanner scanner = new Scanner(System.in);
+//        scanner.nextLine();
 
         homeKit.clean();
         client.close();

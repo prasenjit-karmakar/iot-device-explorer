@@ -12,6 +12,7 @@ import com.microsoft.azure.sdk.iot.service.Device;
 import com.microsoft.azure.sdk.iot.service.RegistryManager;
 import com.microsoft.azure.sdk.iot.service.devicetwin.DeviceTwin;
 import com.microsoft.azure.sdk.iot.service.devicetwin.DeviceTwinDevice;
+import com.microsoft.azure.sdk.iot.service.devicetwin.Pair;
 import com.microsoft.azure.sdk.iot.service.exceptions.IotHubException;
 
 import javax.validation.Valid;
@@ -20,6 +21,7 @@ import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -78,8 +80,22 @@ public class DeviceExplorerController {
         DeviceTwin twin = DeviceTwin.createFromConnectionString(deviceExplorerConfiguration.getIotHubconnectionString());
         DeviceTwinDevice twinDevice = new DeviceTwinDevice(id);
         twin.getTwin(twinDevice);
-        String properties = twinDevice.reportedPropertiesToString().replace("Reported Properties", "");
-        DeviceTwinInfo deviceTwinInfo = new Gson().fromJson(properties, DeviceTwinInfo.class);
+        //String properties = twinDevice.reportedPropertiesToString().replace("Reported Properties", "");
+        //DeviceTwinInfo deviceTwinInfo = new Gson().fromJson(properties, DeviceTwinInfo.class);
+        Set<Pair> pairs = twinDevice.getReportedProperties();
+        DeviceTwinInfo deviceTwinInfo = new DeviceTwinInfo();
+        for(Pair pair: pairs)
+        {
+            if("nextServiceDate".equals(pair.getKey()))
+                deviceTwinInfo.setNextServiceDate((String) pair.getValue());
+            if("manufacturer".equals(pair.getKey()))
+                deviceTwinInfo.setManufacturer((String) pair.getValue());
+            if("lastServiceDate".equals(pair.getKey()))
+                deviceTwinInfo.setLastServiceDate((String) pair.getValue());
+            if("modelNumber".equals(pair.getKey()))
+                deviceTwinInfo.setModelNumber((String) pair.getValue());
+        }
+
         Device d = registryManager.getDevice(id);
         return new DeviceDto(d.getDeviceId(), d.getGenerationId(), d.getStatus().name(), d.getStatusUpdatedTime(), d.getConnectionState().name(), d.getConnectionStateUpdatedTime()
                 , d.getLastActivityTime(), d.getCloudToDeviceMessageCount(), deviceTwinInfo);

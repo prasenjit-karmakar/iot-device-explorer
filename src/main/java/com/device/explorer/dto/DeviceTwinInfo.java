@@ -1,6 +1,7 @@
 package com.device.explorer.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -9,37 +10,49 @@ import org.hibernate.validator.constraints.NotEmpty;
  */
 public class DeviceTwinInfo {
     @NotEmpty
-    private final String bedRoomLights;
+    private String manufacturer;
     @NotEmpty
-    private final String homeTemp;
+    private String modelNumber;
     @NotEmpty
-    private final String homeSecurityCamera;
+    private String lastServiceDate;
     @NotEmpty
-    private final String livingRoomLights;
+    private String nextServiceDate;
 
 
-    @JsonCreator
-    public DeviceTwinInfo(@JsonProperty("bedRoomLights") String bedRoomLights, @JsonProperty("homeTemp") String homeTemp,
-                          @JsonProperty("homeSecurityCamera") String homeSecurityCamera, @JsonProperty("livingRoomLights") String livingRoomLights) {
-        this.bedRoomLights = bedRoomLights;
-        this.homeTemp = homeTemp;
-        this.homeSecurityCamera = homeSecurityCamera;
-        this.livingRoomLights = livingRoomLights;
+    public DeviceTwinInfo() {
     }
 
-    public String getBedRoomLights() {
-        return bedRoomLights;
+
+
+    public String getManufacturer() {
+        return manufacturer;
     }
 
-    public String getHomeTemp() {
-        return homeTemp;
+    public String getModelNumber() {
+        return modelNumber;
     }
 
-    public String getHomeSecurityCamera() {
-        return homeSecurityCamera;
+    public String getLastServiceDate() {
+        return lastServiceDate;
     }
 
-    public String getLivingRoomLights() {
-        return livingRoomLights;
+    public String getNextServiceDate() {
+        return nextServiceDate;
+    }
+
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+
+    public void setModelNumber(String modelNumber) {
+        this.modelNumber = modelNumber;
+    }
+
+    public void setLastServiceDate(String lastServiceDate) {
+        this.lastServiceDate = lastServiceDate;
+    }
+
+    public void setNextServiceDate(String nextServiceDate) {
+        this.nextServiceDate = nextServiceDate;
     }
 }
