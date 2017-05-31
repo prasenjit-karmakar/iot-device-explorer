@@ -1,12 +1,9 @@
 package com.device.explorer.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
- * Created by Lenovo on 29-05-2017.
+ * @author Prasenjit Karmakar
  */
 public class DeviceTwinInfo {
     @NotEmpty
@@ -21,7 +18,6 @@ public class DeviceTwinInfo {
 
     public DeviceTwinInfo() {
     }
-
 
 
     public String getManufacturer() {
