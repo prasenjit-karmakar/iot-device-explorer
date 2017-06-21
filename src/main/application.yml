@@ -10,10 +10,3 @@ iotHub:
 # sharedAccessKey: mfBZLsKD8x6zxRNZ6dN4QAm6g9JB6Ly+fkYk7aLJIDc=
 
 maxShowDeviceCount: 100
-server:
-  applicationConnectors:
-  - type: http
-    port: 9095
-  adminConnectors:
-  - type: http
-    port: 9096
