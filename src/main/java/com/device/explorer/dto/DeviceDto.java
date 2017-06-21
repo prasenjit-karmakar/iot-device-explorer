@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @Author Prasenjit Karmakar
@@ -26,14 +26,17 @@ public class DeviceDto {
     private final String lastActivityTime;
     @NotEmpty
     private final long cloudToDeviceMessageCount;
-    @Valid
-    private final DeviceTwinInfo deviceTwin;
+
+    private final List<DeviceTwinProperty> deviceTwin;
+    @NotEmpty
+    private final String accessKey;
 
     @JsonCreator
     public DeviceDto(@JsonProperty("deviceId") String deviceId, @JsonProperty("generationId") String generationId, @JsonProperty("status") String status,
                      @JsonProperty("statusUpdatedTime") String statusUpdatedTime, @JsonProperty("connectionState") String connectionState,
                      @JsonProperty("connectionStateUpdatedTime") String connectionStateUpdatedTime, @JsonProperty("lastActivityTime") String lastActivityTime,
-                     @JsonProperty("cloudToDeviceMessageCount") long cloudToDeviceMessageCount, @JsonProperty("deviceTwin") DeviceTwinInfo deviceTwinInfo) {
+                     @JsonProperty("cloudToDeviceMessageCount") long cloudToDeviceMessageCount, @JsonProperty("deviceTwin") List<DeviceTwinProperty> deviceTwinInfo,
+                     @JsonProperty("accessKey") String accessKey) {
         this.deviceId = deviceId;
         this.generationId = generationId;
         this.status = status;
@@ -43,6 +46,7 @@ public class DeviceDto {
         this.lastActivityTime = lastActivityTime;
         this.cloudToDeviceMessageCount = cloudToDeviceMessageCount;
         this.deviceTwin = deviceTwinInfo;
+        this.accessKey = accessKey;
     }
 
     public String getDeviceId() {
@@ -78,7 +82,11 @@ public class DeviceDto {
         return cloudToDeviceMessageCount;
     }
 
-    public DeviceTwinInfo getDeviceTwin() {
+    public List<DeviceTwinProperty> getDeviceTwin() {
         return deviceTwin;
+    }
+
+    public String getAccessKey() {
+        return accessKey;
     }
 }

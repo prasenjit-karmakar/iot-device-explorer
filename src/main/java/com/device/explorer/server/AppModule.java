@@ -1,6 +1,7 @@
 package com.device.explorer.server;
 
 import com.device.explorer.configuration.DeviceExplorerConfiguration;
+import com.device.explorer.configuration.IotHubConfiguration;
 import com.google.inject.AbstractModule;
 import io.dropwizard.setup.Environment;
 
@@ -18,6 +19,7 @@ public class AppModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        bind(IotHubConfiguration.class).toInstance(configuration.getIotHub());
         bind(DeviceExplorerConfiguration.class).toInstance(configuration);
     }
 }

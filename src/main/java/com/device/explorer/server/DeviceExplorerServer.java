@@ -6,7 +6,7 @@ import com.google.inject.Injector;
 import io.dropwizard.setup.Environment;
 
 /**
- * Created by Lenovo on 31-05-2017.
+ * @author Prasenjit Karmakar
  */
 public class DeviceExplorerServer extends DeviceExplorerApplication {
     @Override

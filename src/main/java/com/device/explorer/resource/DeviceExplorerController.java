@@ -1,7 +1,9 @@
 package com.device.explorer.resource;
 
-import com.device.explorer.dto.DeviceConnectionString;
 import com.device.explorer.dto.DeviceDto;
+import com.device.explorer.dto.DeviceRequest;
+import com.device.explorer.dto.DeviceTwinProperty;
+import com.device.explorer.dto.DeviceUpdateRequest;
 import com.device.explorer.service.DeviceService;
 import com.google.inject.Inject;
 import com.microsoft.azure.sdk.iot.service.exceptions.IotHubException;
@@ -28,9 +30,10 @@ public class DeviceExplorerController {
 
     @POST
     @Path("/{deviceName}")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public DeviceDto registerDevice(@PathParam("deviceName") String deviceName) throws IOException, NoSuchAlgorithmException {
-        return deviceService.registerDevice(deviceName);
+    public DeviceDto registerDevice(@PathParam("deviceName") String deviceName, @Valid DeviceRequest request) throws IOException, NoSuchAlgorithmException {
+        return deviceService.registerDevice(deviceName, request);
     }
 
     @GET
@@ -46,6 +49,20 @@ public class DeviceExplorerController {
         return deviceService.getDeviceById(id);
     }
 
+    @PUT
+    @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void updateDeviceById(@PathParam("id") String id, @Valid DeviceUpdateRequest request) throws Exception {
+        deviceService.updateDevice(id, request);
+    }
+
+    @GET
+    @Path("/search")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<DeviceDto> searchDevice(@QueryParam("name") String name) throws Exception {
+        return deviceService.searchDevice(name);
+    }
+
     @DELETE
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -54,11 +71,18 @@ public class DeviceExplorerController {
     }
 
     @POST
-    @Path("/deviceTwin")
+    @Path("/deviceTwin/{deviceId}/{accessKey}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String setDeviceTwin(@Valid DeviceConnectionString deviceConnectionString) throws Exception {
-        deviceService.setDeviceTwin(deviceConnectionString);
-        return "Success";
+    public List<DeviceTwinProperty> setDeviceTwin(@PathParam("deviceId") String deviceId, @PathParam("accessKey") String accessKey,
+                                                  List<DeviceTwinProperty> twinParams) throws Exception {
+        return deviceService.setDeviceTwin(twinParams, accessKey, deviceId);
+    }
+
+    @DELETE
+    @Path("/deviceTwin/{deviceId}/{accessKey}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void deleteDeviceTwin(@PathParam("deviceId") String deviceId, @PathParam("accessKey") String accessKey) throws Exception {
+        deviceService.deleteDeviceTwin(accessKey, deviceId);
     }
 
 }

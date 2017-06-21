@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 /**
  * @Author Prasenjit Karmakar
@@ -12,37 +12,31 @@ import javax.validation.constraints.Min;
 public class DeviceExplorerConfiguration extends Configuration {
 
     @NotEmpty
-    private String defaultName;
+    private final String defaultName;
 
-    @NotEmpty
-    private String iotHubconnectionString;
+    @NotNull
+    private final IotHubConfiguration iotHub;
 
-    @Min(10)
-    private int maxShowDeviceCount;
 
-    public String getIotHubconnectionString() {
-        return iotHubconnectionString;
+    private final int maxShowDeviceCount;
+
+    public DeviceExplorerConfiguration(@JsonProperty("defaultName") String defaultName,
+                                       @JsonProperty("iotHub") IotHubConfiguration iotHub,
+                                       @JsonProperty("maxShowDeviceCount") int maxShowDeviceCount) {
+        this.defaultName = defaultName;
+        this.iotHub = iotHub;
+        this.maxShowDeviceCount = maxShowDeviceCount;
     }
 
-    public void setIotHubconnectionString(String iotHubconnectionString) {
-        this.iotHubconnectionString = iotHubconnectionString;
-    }
-
-    @JsonProperty
     public String getDefaultName() {
         return defaultName;
     }
 
-    @JsonProperty
-    public void setDefaultName(String defaultName) {
-        this.defaultName = defaultName;
+    public IotHubConfiguration getIotHub() {
+        return iotHub;
     }
 
     public int getMaxShowDeviceCount() {
         return maxShowDeviceCount;
-    }
-
-    public void setMaxShowDeviceCount(int maxShowDeviceCount) {
-        this.maxShowDeviceCount = maxShowDeviceCount;
     }
 }
